@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/lib/kysley";
 import { ChevronRightIcon } from "lucide-react";
 
-export default async function PatientTable() {
+export default async function PatientList() {
   const patients = await db.selectFrom("patients").selectAll().execute();
 
   return (
