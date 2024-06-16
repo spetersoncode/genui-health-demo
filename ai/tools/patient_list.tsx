@@ -7,7 +7,7 @@ import { db } from "@/lib/kysley";
 
 
 export const patientListSchema = z.object({
-  count: z.number().default(20).describe("Number of patients to display"),
+  count: z.number().default(5).describe("Number of patients to display"),
 });
 
 export const mockedSummaries = [

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { createRunnableUI } from "@/utils/server";
 import { db } from "@/lib/kysley";
-import PatientCard, { PatientCardProps } from "@/components/prebuilt/patient_card";
+import PatientCard from "@/components/prebuilt/patient_card";
 import { getPatient, getRecentActiveConditions, getRecentEncounter } from "@/lib/get_data";
 
 export const patientCardSchema = z.object({
@@ -91,7 +91,7 @@ export async function patientCardData(input: z.infer<typeof patientCardSchema>) 
 
 export const patientCardTool = new DynamicStructuredTool({
   name: "patient_card",
-  description: "Display an information card about a specific patient.",
+  description: "Display an information card/chart about a patient.",
   schema: patientCardSchema,
   func: async (input, config) => {
     const stream = await createRunnableUI(config, <p>Loading...</p>);

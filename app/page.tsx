@@ -1,3 +1,6 @@
+"use client";
+
+import BpChart from "@/components/prebuilt/bp_graph";
 import Chat from "@/components/prebuilt/chat";
 
 export default function Home() {

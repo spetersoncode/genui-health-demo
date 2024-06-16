@@ -2,7 +2,7 @@ import { BaseMessage } from "@langchain/core/messages";
 import { RunnableConfig } from "@langchain/core/runnables";
 import { StateGraph, START, END } from "@langchain/langgraph";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
-import { patientListTool, patientCardTool } from "./tools";
+import { patientListTool, patientCardTool, bpGraphTool } from "./tools";
 import { ChatOpenAI } from "@langchain/openai";
 
 interface AgentExecutorState {
@@ -44,7 +44,7 @@ When the user asks for help or your capabilities, you should provide a list of t
     ["human", "{input}"],
   ]);
 
-  const tools = [patientListTool, patientCardTool];
+  const tools = [bpGraphTool, patientListTool, patientCardTool];
 
   const llm = new ChatOpenAI({
     temperature: 0,
@@ -91,6 +91,7 @@ const invokeTools = async (
     throw new Error("No tool call found.");
   }
   const toolMap = {
+    [bpGraphTool.name]: bpGraphTool,
     [patientListTool.name]: patientListTool,
     [patientCardTool.name]: patientCardTool,
   };
