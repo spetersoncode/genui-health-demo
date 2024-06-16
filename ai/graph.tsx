@@ -8,6 +8,7 @@ import {
 import { githubTool, invoiceTool, weatherTool, websiteDataTool } from "./tools";
 import { ChatOpenAI } from "@langchain/openai";
 import { patientListTool } from "./tools/patient_list";
+import { patientCardTool } from "./tools/patient_card";
 
 interface AgentExecutorState {
   input: string;
@@ -47,7 +48,7 @@ Your job is to determine whether or not you have a tool which can handle the use
     ["human", "{input}"],
   ]);
 
-  const tools = [patientListTool, githubTool, invoiceTool, weatherTool, websiteDataTool];
+  const tools = [patientListTool, patientCardTool, githubTool, websiteDataTool];
 
   const llm = new ChatOpenAI({
     temperature: 0,
@@ -95,9 +96,8 @@ const invokeTools = async (
   }
   const toolMap = {
     [patientListTool.name]: patientListTool,
+    [patientCardTool.name]: patientCardTool,   
     [githubTool.name]: githubTool,
-    [invoiceTool.name]: invoiceTool,
-    [weatherTool.name]: weatherTool,
     [websiteDataTool.name]: websiteDataTool,
   };
 
