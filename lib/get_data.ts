@@ -1,6 +1,5 @@
 import { db } from "./kysley";
 
-
 export async function getPatient(firstName: string, lastName: string) {
   let query = db.selectFrom("patients").select(["Id", "FIRST", "LAST", "BIRTHDATE"])
     .where(eb => eb.or([eb("FIRST", "like", `%${firstName}%`), eb("LAST", "like", `%${firstName}%`)]))
