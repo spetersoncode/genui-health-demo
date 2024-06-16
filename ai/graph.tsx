@@ -1,14 +1,9 @@
 import { BaseMessage } from "@langchain/core/messages";
 import { RunnableConfig } from "@langchain/core/runnables";
 import { StateGraph, START, END } from "@langchain/langgraph";
-import {
-  ChatPromptTemplate,
-  MessagesPlaceholder,
-} from "@langchain/core/prompts";
-import { githubTool, invoiceTool, weatherTool, websiteDataTool } from "./tools";
+import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
+import { patientListTool, patientCardTool } from "./tools";
 import { ChatOpenAI } from "@langchain/openai";
-import { patientListTool } from "./tools/patient_list";
-import { patientCardTool } from "./tools/patient_card";
 
 interface AgentExecutorState {
   input: string;
@@ -33,13 +28,14 @@ interface AgentExecutorState {
 
 const invokeModel = async (
   state: AgentExecutorState,
-  config?: RunnableConfig,
+  config?: RunnableConfig
 ): Promise<Partial<AgentExecutorState>> => {
   const initialPrompt = ChatPromptTemplate.fromMessages([
     [
       "system",
       `You are a helpful assistant. You're provided a list of tools, and an input from the user.\n
-Your job is to determine whether or not you have a tool which can handle the users input, or respond with plain text.`,
+Your job is to determine whether or not you have a tool which can handle the users input, or respond with plain text.\n
+When the user asks for help or your capabilities, you should provide a list of tools available to you.`,
     ],
     new MessagesPlaceholder({
       variableName: "chat_history",
@@ -48,7 +44,7 @@ Your job is to determine whether or not you have a tool which can handle the use
     ["human", "{input}"],
   ]);
 
-  const tools = [patientListTool, patientCardTool, githubTool, websiteDataTool];
+  const tools = [patientListTool, patientCardTool];
 
   const llm = new ChatOpenAI({
     temperature: 0,
@@ -61,7 +57,7 @@ Your job is to determine whether or not you have a tool which can handle the use
       input: state.input,
       chat_history: state.chat_history,
     },
-    config,
+    config
   );
 
   if (result.tool_calls && result.tool_calls.length > 0) {
@@ -89,26 +85,21 @@ const invokeToolsOrReturn = (state: AgentExecutorState) => {
 
 const invokeTools = async (
   state: AgentExecutorState,
-  config?: RunnableConfig,
+  config?: RunnableConfig
 ): Promise<Partial<AgentExecutorState>> => {
   if (!state.toolCall) {
     throw new Error("No tool call found.");
   }
   const toolMap = {
     [patientListTool.name]: patientListTool,
-    [patientCardTool.name]: patientCardTool,   
-    [githubTool.name]: githubTool,
-    [websiteDataTool.name]: websiteDataTool,
+    [patientCardTool.name]: patientCardTool,
   };
 
   const selectedTool = toolMap[state.toolCall.name];
   if (!selectedTool) {
     throw new Error("No tool found in tool map.");
   }
-  const toolResult = await selectedTool.invoke(
-    state.toolCall.parameters,
-    config,
-  );
+  const toolResult = await selectedTool.invoke(state.toolCall.parameters, config);
   return {
     toolResult: JSON.parse(toolResult),
   };

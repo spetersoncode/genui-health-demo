@@ -115,7 +115,7 @@ export default function Chat() {
         className="w-full flex flex-row gap-2"
       >
         <Input
-          placeholder="What's the weather like in San Francisco?"
+          placeholder="Show me a list of 5 patietns"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
