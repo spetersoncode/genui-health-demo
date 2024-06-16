@@ -10,7 +10,7 @@ export const patientListSchema = z.object({
   count: z.number().default(20).describe("Number of patients to display"),
 });
 
-export const listOfMockedSummaries = [
+export const mockedSummaries = [
   "Recovering from flu",
   "Recovering from cold",
   "Recovering from broken leg",
@@ -23,8 +23,7 @@ export const listOfMockedSummaries = [
 ]
 
 export async function patientListData(input: z.infer<typeof patientListSchema>) {
-  const orderByClause = sql<string>`random()`
-  const patientQuery = await db.selectFrom("patients")
+  let patientQuery = db.selectFrom("patients")
     .select([
       "Id",
       "FIRST",
@@ -32,42 +31,20 @@ export async function patientListData(input: z.infer<typeof patientListSchema>) 
       "BIRTHDATE",
     ])
     .limit(input.count)
-    .orderBy(orderByClause)
-    .execute()
+    .orderBy(sql<string>`random()`);
 
-    let patients = [];
-    for (const patient of patientQuery) {
-      patients.push({
-        id: patient.Id || "",
-        name: `${patient.FIRST} ${patient.LAST}`,
-        age: new Date().getFullYear() - new Date(patient.BIRTHDATE || "1900-01-01").getFullYear(),
-        summary: listOfMockedSummaries[Math.floor(Math.random() * listOfMockedSummaries.length)]
-      });
+  const patientResult = await patientQuery.execute();
 
-
-    }
-
-
-  // const patients = [
-  //   {
-  //     id: 1,
-  //     name: "John Doe",
-  //   },
-  //     age: 35,
-  //     summary: "Recovering from flu",
-  //   {
-  //     id: 2,
-  //     name: "Jane Doe",
-  //     age: 25,
-  //     summary: "Recovering from cold",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Calvin Hobbes',
-  //     age: 10,
-  //     summary: 'Recovering from broken leg'
-  //   }
-  // ];
+  let patients = [];
+  for (const patient of patientResult) {
+    patients.push({
+      id: patient.Id || "",
+      firstName: patient.FIRST || "",
+      lastName: patient.LAST || "",
+      age: new Date().getFullYear() - new Date(patient.BIRTHDATE || "1900-01-01").getFullYear(),
+      summary: mockedSummaries[Math.floor(Math.random() * mockedSummaries.length)]
+    });
+  }
   return {
     ...input,
     patients: patients,

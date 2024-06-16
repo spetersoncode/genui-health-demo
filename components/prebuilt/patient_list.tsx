@@ -8,7 +8,8 @@ import { ChevronRightIcon } from "lucide-react";
 export interface PatientListProps {
   patients: {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     age: number;
     summary: string;
   }[];
@@ -27,12 +28,12 @@ export default async function PatientList(props: PatientListProps) {
               <Avatar className="border w-10 h-10">
                 <AvatarImage src={`https://robohash.org/${patient.id}`} />
                 <AvatarFallback>
-                  {patient.name[0]}
-                  {patient.name.split(" ")[1][0]}
+                  {patient.firstName[0]}
+                  {patient.lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="grid gap-1">
-                <div className="font-medium">{patient.name}</div>
+                <div className="font-medium">{patient.firstName} {patient.lastName}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Age {patient.age} | {patient.summary}
                 </div>
