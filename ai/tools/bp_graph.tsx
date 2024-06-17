@@ -21,7 +21,7 @@ export async function bpGraphData(input: z.infer<typeof bpGraphSchema>) {
     .select(["DATE", "VALUE"])
     .where("PATIENT", "=", patient.id)
     .where("CODE", "=", "8480-6")
-    .orderBy("DATE", "desc")
+    .orderBy("DATE", "asc")
     .limit(10)
     .execute();
   const bpSystolicData = query.map((result) => ({
@@ -34,7 +34,7 @@ export async function bpGraphData(input: z.infer<typeof bpGraphSchema>) {
     .select(["DATE", "VALUE"])
     .where("PATIENT", "=", patient.id)
     .where("CODE", "=", "8462-4")
-    .orderBy("DATE", "desc")
+    .orderBy("DATE", "asc")
     .limit(10)
     .execute();
   const bpDiastolicData= query.map((result) => ({
