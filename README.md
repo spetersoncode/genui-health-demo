@@ -1,7 +1,7 @@
 # Modifying the LangChain.js Chatbot
 
-This project is an extension of the langchain generative UI demo at [gen-ui](https://github.com/bracesproul/gen-ui). 
-It replaces the stock chatbot features with healthcare-related informaiton and tools. This will be used as a base to experiment further with generative UI, tackling some of the suggested features in the original project. 
+This project is an extension of the langchain generative UI demo at [gen-ui](https://github.com/bracesproul/gen-ui).
+It replaces the stock chatbot features with healthcare-related informaiton and tools. This will be used as a base to experiment further with generative UI, tackling some of the suggested features in the original project.
 Check the "go further" section for more details.
 
 The project contains a sqlite database with 40 patient records with 10 years of history.
